@@ -14,5 +14,5 @@ On peut visualiser si une population se déplace (voiture,transport en commun ou
 le but est de voir si la population se déplace plus ou moins par rapport aux autres années.
 On peut voir l'impact des restrictions liées à la pandémie de covid19.
 
-#Type de fichier
+# Type de fichier
 c'est un csv. C'est un tableau avec une ligne par pays.
