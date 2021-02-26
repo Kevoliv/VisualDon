@@ -17,15 +17,22 @@
 
 
       const svg = document.getElementById('svg')
+      const image = document.getElementById('image')
+      let isRed = true
 
 const createRandomCircle = () => {
-  const image = document.getElementById('image')
+
   image.setAttribute('cx', Math.random() * 200)
   image.setAttribute('cy', Math.random() * 100)
   svg.appendChild(image)
 }
+image.addEventListener('click', () => {
+  isRed = !isRed
+  image.setAttribute('fill', isRed ? 'blue' : 'red')
+  Array.from(Array(10)).forEach(createRandomCircle)
 
-Array.from(Array(10)).forEach(createRandomCircle)
+})
+
 
     </script>
   </body>
