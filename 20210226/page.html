@@ -26,9 +26,11 @@ const createRandomCircle = () => {
   image.setAttribute('cy', Math.random() * 100)
   svg.appendChild(image)
 }
-image.addEventListener('click', () => {
+image.addEventListener('mouseenter', () => {
   isRed = !isRed
   image.setAttribute('fill', isRed ? 'blue' : 'red')
+  image.setAttribute('ry', 15)
+  image.setAttribute('rx', 15)
   Array.from(Array(10)).forEach(createRandomCircle)
 
 })
