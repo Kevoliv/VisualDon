@@ -1,0 +1,11 @@
+<svg version="1.1"
+     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="200" height="200">
+
+
+  <ellipse cx="90" cy="100" rx="50" ry="60" fill="red"/>
+  <line x1="100" x2="50" y1="110" y2="150" stroke="green" stroke-width="15" stroke-linecap="round"/>
+<line x1="120" x2="150" y1="120" y2="50" stroke="blue" stroke-width="15" stroke-linecap="round"/>
+<line x1="150" x2="70" y1="30" y2="20" stroke="orange" stroke-width="15" stroke-linecap="round"/>
+
+</svg>
