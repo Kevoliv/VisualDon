@@ -1,7 +1,7 @@
 const data = require('./data.json')
 
  
-const VilleEtGW = d => d.Canton === 'Neuchâtel'
+const VilleEtGW = d => d.Canton === 'Jura'
 
 const resultat = data
   .filter(VilleEtGW)
