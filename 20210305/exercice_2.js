@@ -39,7 +39,7 @@ const villes = [
     ]
   */
   
-  const habitantsYverdon = villes
+  const habitantsYverdon = villes.find(d => d.nom === 'Yverdon').population
   
   console.log('Nombre d\'habitants à Yverdon', habitantsYverdon)
   
