@@ -43,3 +43,11 @@ svg.selectAll('text')
   .attr('y', HEIGHT - MARGIN_BOTTOM / 2)
   .attr("font-size", "10px")
   .attr('transform', (d, i) => `rotate(-90,${ i * BAR_WIDTH + BAR_WIDTH },${470})`)
+
+  const axisY = axisLeft().scale(yScale)
+  .tickFormat(d => `${d / 1000}k`)
+  .ticks(5)
+
+svg.append('svg')
+  .attr('transform', `translate(${MARGIN_LEFT - 3})`)
+  .call(axisY)
