@@ -12,7 +12,7 @@ console.log(DATA);
 const WIDTH = 1000
 const HEIGHT = 500
 const MARGIN = 5
-const MARGIN_BOTTOM = 80
+const MARGIN_BOTTOM = 90
 const BAR_WIDTH = WIDTH / DATA.length
 
 const svg = select('body')
@@ -42,4 +42,4 @@ svg.selectAll('text')
   .attr('x', (d, i) => i * BAR_WIDTH + BAR_WIDTH / 2)
   .attr('y', HEIGHT - MARGIN_BOTTOM / 2)
   .attr("font-size", "10px")
-  .attr('transform', (d, i) => `rotate(-90,${ i * BAR_WIDTH + BAR_WIDTH },${458})`)
+  .attr('transform', (d, i) => `rotate(-90,${ i * BAR_WIDTH + BAR_WIDTH },${470})`)
