@@ -1,4 +1,5 @@
 
+#Exercice 1
 Pour la première visualisation veut juste essayer de rabaisser Clinton ( c'est un peu une manipulation de l'avis des gens).
 
 La deuxième partie, je pense que c'est surtout pour lever un peu le tabou sur la pornographie ( ce qui serait une bonne chose pour un site tel que pornHub).
