@@ -1,8 +1,15 @@
 import L from 'leaflet'
 import arbres from './arbres.json'
 import batiments from './batiments.json'
+import circuit_trace from './circuit_trace.json'
 
 const map = L.map('map').setView([46.78104, 6.64707], 17)
+
+var myStyle = {
+  "color": "red",
+  "weight": 5,
+  "opacity": 0.65
+};
 
 L.tileLayer(
   'https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}{r}.{ext}',
@@ -27,14 +34,7 @@ arbres.map(d => {
 })
 
 L.geoJSON(
-  batiments,
-  {
-    style: feature =>
-      feature.properties['name'] === 'Centre Saint-Roch'
-        ? { color: 'indianred' }
-        : { color: 'steelblue' },
-    onEachFeature: (feature, layer) =>
-      layer.bindPopup(feature.properties.name || feature.properties['addr:street'] || feature.properties.uid)
-      
-  },
+  circuit_trace,{
+  style: myStyle
+  }
 ).addTo(map)
