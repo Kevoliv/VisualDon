@@ -638,3 +638,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
 	margin-left: -12px;
 	border-right-color: #fff;
 	}
+
+
+	.leaflet-container.white-bg{
+		background-color: white;
+	  }
+	  .leaflet-container.blue-bg{
+		background-color: blue;
+	  }
