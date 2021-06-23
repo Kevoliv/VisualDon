@@ -8,22 +8,32 @@
   <link rel="stylesheet" href="leaflet.css" />
   <link rel="stylesheet" href="style.css" />
   <style>
-    
+
   </style>
 </head>
 
 <body>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
   <div class="slidecontainer">
     <input type="range" min="2000" max="2021" value="2021" class="slider" id="myRange">
   </div>
-  <div id="map"></div>
+
+  <div class="graph" id="wordCountContainer"></div>
+
+  <div id="map">
+
+  </div>
   <div id="info">
     <h1 id="titre"></h1>
     <p id="intro"></p>
 
   </div>
+  
+ 
   <script src="build/bundle.js"></script>
+
+
 </body>
 
 </html>

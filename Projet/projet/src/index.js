@@ -3,10 +3,17 @@ import arbres from './arbres.json'
 import batiments from './batiments.json'
 import circuit_trace from './circuit_trace.json'
 import test from './test.json'
+import d3 from 'd3'
+
+
+
+
+
 
 //const map = L.map('map').setView([45.62218251898255, 9.284766257898681], 14)
 
 const map = L.map('map').setView([15, 0], 3)
+var f1DataLive;
 
 var myStyle = {
   "color": "red",
@@ -18,13 +25,25 @@ var slider = document.getElementById("myRange");
 var year = 2021;
 // Update the current slider value (each time you drag the slider handle)
 slider.oninput = function () {
+
+
+
   year = this.value;
   console.log(year);
+  //fetchData();
 
 
 }
 
+function fetchData() {
 
+  fetch("http://ergast.com/api/f1/" + year + "/circuits.json?limit=100")
+    .then(r => r.json())
+    .then(data => f1DataLive = data)
+    .then(data => console.log(data))
+
+
+}
 
 /*let isCacheSupported = 'caches' in window;
  
@@ -136,10 +155,10 @@ function clean_map() {
 }
 
 
-var f1DataLive;
 
 
 
+/*
 $.ajax({
   url: "http://ergast.com/api/f1/" + year + "/circuits.json?limit=100",
   dataType: "json",
@@ -153,19 +172,23 @@ $.ajax({
     //getDataF1(data);
 
 
-    /*for (var i = 0; i < data.MRData.CircuitTable.Circuits.length; i++) {
+    for (var i = 0; i < data.MRData.CircuitTable.Circuits.length; i++) {
       L.marker([data.MRData.CircuitTable.Circuits[i].Location.lat, data.MRData.CircuitTable.Circuits[i].Location.long], { icon }).addTo(map).bindPopup(data.MRData.CircuitTable.Circuits[i].circuitName);
-    }*/
+    }
   },
   error: function (xhr) {
     alert(xhr.statusText)
   }
 })
+*/
 
 
 
-console.log("Dehors");
-console.log(f1DataLive);
+
+
+
+
+
 //console.log(testLive);
 
 
@@ -173,77 +196,98 @@ console.log(f1DataLive);
 function onMapClick(e) {
 
   document.getElementById("info").style.visibility = "hidden";
-  map.flyTo([15, 0], 3);
+  map.flyTo([15, 0], 3, { 'duration': 1.2 });
 
 
   clean_map();
 }
 
+
+
 // Afficher la popup d'information
 map.on('click', onMapClick);
 var name = "";
-
-for (var i = 0; i < test.MRData.CircuitTable.Circuits.length; i++) {
-
-  L.marker([test.MRData.CircuitTable.Circuits[i].Location.lat, test.MRData.CircuitTable.Circuits[i].Location.long], { icon }).addTo(map).on('click', function (e) {
+var multipolygon;
 
 
-    for (var i = 0; i < test.MRData.CircuitTable.Circuits.length; i++) {
+fetchData();
+setTimeout(() => {
 
-      if (e.latlng.lng == test.MRData.CircuitTable.Circuits[i].Location.long) {
-        var ret = test.MRData.CircuitTable.Circuits[i].url.replace("http:\/\/en.wikipedia.org\/wiki\/", "");
 
-        $.ajax({
-          url: "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&titles=" + ret + "&exsentences=4&exintro=1&explaintext=1&exsectionformat=plain&redirects",
-          dataType: "json",
-          success: function (data) {
 
-            var pageid = [];
-            for (var id in data.query.pages) {
-              pageid.push(id);
+  for (var i = 0; i < f1DataLive.MRData.CircuitTable.Circuits.length; i++) {
+
+    L.marker([f1DataLive.MRData.CircuitTable.Circuits[i].Location.lat, f1DataLive.MRData.CircuitTable.Circuits[i].Location.long], { icon }).addTo(map).on('click', function (e) {
+
+
+      for (var i = 0; i < f1DataLive.MRData.CircuitTable.Circuits.length; i++) {
+
+        if (e.latlng.lng == f1DataLive.MRData.CircuitTable.Circuits[i].Location.long) {
+          var ret = f1DataLive.MRData.CircuitTable.Circuits[i].url.replace("http:\/\/en.wikipedia.org\/wiki\/", "");
+
+          $.ajax({
+            url: "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&titles=" + ret + "&exsentences=4&exintro=1&explaintext=1&exsectionformat=plain&redirects",
+            dataType: "json",
+            success: function (data) {
+
+              var pageid = [];
+              for (var id in data.query.pages) {
+                pageid.push(id);
+              }
+              //console.log(data.query.pages[pageid[0]].extract);
+              document.getElementById("intro").textContent = data.query.pages[pageid[0]].extract;
+
+
+              multipolygon = L.geoJSON(
+                circuit_trace, {
+                style: myStyle
+              }
+              )
+              setTimeout(() => {
+                multipolygon.addTo(map);
+              }, 1000);
+              /**/
+
+
+            },
+            error: function (xhr) {
+              alert(xhr.statusText)
             }
-            //console.log(data.query.pages[pageid[0]].extract);
-            document.getElementById("intro").textContent = data.query.pages[pageid[0]].extract;
+          })
+
+          console.log(ret);
+          document.getElementById("titre").textContent = f1DataLive.MRData.CircuitTable.Circuits[i].circuitName;
 
 
-            L.geoJSON(
-              circuit_trace, {
-              style: myStyle
-            }
-            ).addTo(map)
 
-          },
-          error: function (xhr) {
-            alert(xhr.statusText)
-          }
-        })
-
-        console.log(ret);
-        document.getElementById("titre").textContent = test.MRData.CircuitTable.Circuits[i].circuitName;
-
-
+        }
 
       }
 
-    }
-
-    document.getElementById("info").style.visibility = "visible";
-    console.log(e.latlng.lng);
+      document.getElementById("info").style.visibility = "visible";
+      console.log(e.latlng.lng);
 
 
-    // var info = document.getElementById("info")
-    //info.textContent += 'hello world !';
+      // var info = document.getElementById("info")
+      //info.textContent += 'hello world !';
+
+      //console.log("buind");
+      //console.log(multipolygon.getBounds());
+
+      map.flyTo(e.latlng, 15, { 'duration': 1.2 });
+      //map.flyToBounds(e.latlng,e.latlng, 15, {'duration':1.2});
+      // flyTo([test.MRData.CircuitTable.Circuits[2].Location.lat, test.MRData.CircuitTable.Circuits[2].Location.long], 12);
+    });
+
+  }
+
+}, 1000);
 
 
-    map.flyTo(e.latlng, 15);
-    // flyTo([test.MRData.CircuitTable.Circuits[2].Location.lat, test.MRData.CircuitTable.Circuits[2].Location.long], 12);
-  });
-
-}
 
 
 
-
+//---------------------------------------------------------------------------
 
 
 
