@@ -1,9 +1,10 @@
-import L from 'leaflet'
+import L, { marker } from 'leaflet'
 import arbres from './arbres.json'
 import batiments from './batiments.json'
 import circuit_trace from './circuit_trace.json'
 import test from './test.json'
-import d3 from 'd3'
+import * as d3 from 'd3'
+import resultat from './resultats.json'
 
 
 
@@ -14,6 +15,7 @@ import d3 from 'd3'
 
 const map = L.map('map').setView([15, 0], 3)
 var f1DataLive;
+var result;
 
 var myStyle = {
   "color": "red",
@@ -26,11 +28,15 @@ var year = 2021;
 // Update the current slider value (each time you drag the slider handle)
 slider.oninput = function () {
 
+  //map.removeLayer();
+  //const map = L.map('map')
 
 
   year = this.value;
   console.log(year);
-  //fetchData();
+  fetchData();
+  fetchDataResults()
+  
 
 
 }
@@ -40,7 +46,18 @@ function fetchData() {
   fetch("http://ergast.com/api/f1/" + year + "/circuits.json?limit=100")
     .then(r => r.json())
     .then(data => f1DataLive = data)
-    .then(data => console.log(data))
+    .then(data => console.log("Circuit: " + data))
+
+
+}
+
+
+function fetchDataResults() {
+
+  fetch("http://ergast.com/api/f1/" + year + "/results.json?limit=1000")
+    .then(r => r.json())
+    .then(data => result = data)
+    .then(data => console.log("Result: " + data))
 
 
 }
@@ -152,6 +169,9 @@ function clean_map() {
 
 
   });
+
+  d3.selectAll("#podium svg").remove();
+
 }
 
 
@@ -200,6 +220,9 @@ function onMapClick(e) {
 
 
   clean_map();
+
+
+  console.log("clean");
 }
 
 
@@ -208,12 +231,14 @@ function onMapClick(e) {
 map.on('click', onMapClick);
 var name = "";
 var multipolygon;
-
+var circuitID;
 
 fetchData();
+fetchDataResults()
+//fetchDataResults();
 setTimeout(() => {
 
-
+  console.log("CircuitTime: " + f1DataLive.MRData.CircuitTable.Circuits.length)
 
   for (var i = 0; i < f1DataLive.MRData.CircuitTable.Circuits.length; i++) {
 
@@ -222,9 +247,13 @@ setTimeout(() => {
 
       for (var i = 0; i < f1DataLive.MRData.CircuitTable.Circuits.length; i++) {
 
+
+
         if (e.latlng.lng == f1DataLive.MRData.CircuitTable.Circuits[i].Location.long) {
           var ret = f1DataLive.MRData.CircuitTable.Circuits[i].url.replace("http:\/\/en.wikipedia.org\/wiki\/", "");
 
+          circuitID = f1DataLive.MRData.CircuitTable.Circuits[i].circuitId;
+          console.log(circuitID);
           $.ajax({
             url: "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&titles=" + ret + "&exsentences=4&exintro=1&explaintext=1&exsectionformat=plain&redirects",
             dataType: "json",
@@ -255,8 +284,145 @@ setTimeout(() => {
             }
           })
 
-          console.log(ret);
+          // console.log(ret);
           document.getElementById("titre").textContent = f1DataLive.MRData.CircuitTable.Circuits[i].circuitName;
+
+
+
+         
+
+          setTimeout(() => {
+
+            // console.log("test "+ result.MRData);
+
+            for (var i = 0; i < result.MRData.RaceTable.Races.length; i++) {
+              //console.log(result.MRData.RaceTable.Races[i].Circuit.circuitId)
+              if (circuitID == result.MRData.RaceTable.Races[i].Circuit.circuitId) {
+
+                /*console.log("avant")
+                console.log(result.MRData.RaceTable.Races[i].Circuit.circuitName);
+                console.log("Hey")
+                console.log("1er " + result.MRData.RaceTable.Races[i].Results[0].Driver.code);
+                console.log("2eme " + result.MRData.RaceTable.Races[i].Results[1].Driver.code);
+                console.log("3eme " + result.MRData.RaceTable.Races[i].Results[2].Driver.code)
+
+
+                */
+
+                // var resultTab = resultat.MRData.RaceTable.Races[i].Results;
+                var resultTab = result.MRData.RaceTable.Races[i].Results;
+
+                const resultPodium = resultTab.filter(resultTab => resultTab.position < 4);
+
+                console.log(resultPodium);
+
+                //console.log(result);
+
+                //set up svg using margin conventions - we'll need plenty of room on the left for labels
+                var margin = {
+                  top: 15,
+                  right: 25,
+                  bottom: 15,
+                  left: 60
+                };
+
+                var width = 300 - margin.left - margin.right,
+                  height = 300 - margin.top - margin.bottom;
+
+                var svg = d3.select("#podium").append("svg")
+                  .attr("width", width + margin.left + margin.right)
+                  .attr("height", height + margin.top + margin.bottom)
+                  // .attr("width", 400)
+                  // .attr("height", 200)
+                  .append("g")
+                  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                var x = d3.scaleLinear()
+                  .range([0, width])
+                  .domain([0, d3.max(resultPodium, function (d) {
+                    return d.points;
+                  })]);
+
+                var y = d3.scaleBand()
+                  .rangeRound([0, height])
+                  .padding(0.1)
+                  .domain(resultPodium.map(function (d) {
+                    return d.Driver.code;
+                  }));
+
+                //make y axis to show bar names
+                var yAxis = d3.axisLeft(y)
+
+
+                var gy = svg.append("g")
+                  .attr("class", "y axis")
+                  .call(yAxis)
+
+                var bars = svg.selectAll(".bar")
+                  .data(resultPodium)
+                  .enter()
+                  .append("g")
+                  
+
+                //append rects
+                bars.append("rect")
+                  .attr("class", "bar")
+                  .attr("y", function (d) {
+                    return y(d.Driver.code);
+                  })
+                  .attr("height", y.bandwidth())
+                  .attr("x", 0)
+                  .attr("width", function (d) {
+                    return x(d.points);
+                  });
+
+                //add a value label to the right of each bar
+                bars.append("text")
+                  .attr("class", "label")
+                  //y position of the label is halfway down the bar
+                  .attr("y", function (d) {
+                    return y(d.Driver.code) + y.bandwidth() / 2 + 4;
+                  })
+                  //x position is 3 pixels to the right of the bar
+                  .attr("x", function (d) {
+                    return x(d.points) + 3;
+                  })
+                  .text(function (d) {
+                    return d.position;
+                  });
+
+
+                console.log("add");
+
+
+
+
+
+
+
+
+
+
+
+
+              }
+
+
+
+
+
+
+
+
+
+
+
+
+
+            }
+          }, 700);
+
+
 
 
 
