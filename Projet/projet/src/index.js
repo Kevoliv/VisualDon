@@ -171,6 +171,7 @@ function clean_map() {
   });
 
   d3.selectAll("#podium svg").remove();
+  d3.selectAll("#BestAverageSpeed svg").remove();
 
 }
 
@@ -244,7 +245,7 @@ setTimeout(() => {
 
     L.marker([f1DataLive.MRData.CircuitTable.Circuits[i].Location.lat, f1DataLive.MRData.CircuitTable.Circuits[i].Location.long], { icon }).addTo(map).on('click', function (e) {
 
-
+      clean_map();
       for (var i = 0; i < f1DataLive.MRData.CircuitTable.Circuits.length; i++) {
 
 
@@ -263,9 +264,18 @@ setTimeout(() => {
               for (var id in data.query.pages) {
                 pageid.push(id);
               }
-              //console.log(data.query.pages[pageid[0]].extract);
-              document.getElementById("intro").textContent = data.query.pages[pageid[0]].extract;
 
+
+              //var a = document.createElement('a');
+              //var linkText = document.createTextNode("my title text");
+              document.getElementById("intro").textContent = data.query.pages[pageid[0]].extract;
+              //a.appendChild(document.getElementById("intro"));
+              //a.title = "Lire plus";
+              // a.href = f1DataLive.MRData.CircuitTable.Circuits[i].url;
+              // var intro =  + "<a href=" + f1DataLive.MRData.CircuitTable.Circuits[i].url + "> lire plus</a>";
+              //console.log(data.query.pages[pageid[0]].extract);
+
+              // document.body.appendChild(a);
 
               multipolygon = L.geoJSON(
                 circuit_trace, {
@@ -287,7 +297,7 @@ setTimeout(() => {
           // console.log(ret);
           document.getElementById("titre").textContent = f1DataLive.MRData.CircuitTable.Circuits[i].circuitName;
 
-          document.getElementById("pays").textContent = f1DataLive.MRData.CircuitTable.Circuits[i].Location.country;
+          document.getElementById("country").textContent = f1DataLive.MRData.CircuitTable.Circuits[i].Location.country;
 
           document.getElementById("city").textContent = " | " + f1DataLive.MRData.CircuitTable.Circuits[i].Location.locality;
 
@@ -313,6 +323,9 @@ setTimeout(() => {
                 */
 
                 // var resultTab = resultat.MRData.RaceTable.Races[i].Results;
+
+
+
                 var resultTab = result.MRData.RaceTable.Races[i].Results;
 
                 const resultPodium = resultTab.filter(resultTab => resultTab.position < 4);
@@ -330,7 +343,7 @@ setTimeout(() => {
                 };
 
                 //var colors = ['#FFD700', '#CECECE','#614E1A'];
-               // var colors = ['#884DA7', '#CECECE','#614E1A'];
+                // var colors = ['#884DA7', '#CECECE','#614E1A'];
 
                 var width = 250 - margin.left - margin.right,
                   height = 250 - margin.top - margin.bottom;
@@ -341,7 +354,7 @@ setTimeout(() => {
                   // .attr("width", 400)
                   // .attr("height", 200)
                   .append("g")
-                  
+
                   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
                 var x = d3.scaleLinear()
@@ -368,9 +381,9 @@ setTimeout(() => {
                 var bars = svg.selectAll(".bar")
                   .data(resultPodium)
                   .enter()
-                  
-                    
-                    
+
+
+
                   .append("g")
 
 
@@ -392,8 +405,8 @@ setTimeout(() => {
                     }
 
                   })
-                  .attr("fill", function(d) { 
-                    
+                  .attr("fill", function (d) {
+
 
                     if (d.position == 1) {
                       return '#FFD700';
@@ -403,8 +416,8 @@ setTimeout(() => {
                       return '#614E1A';
                     }
 
-                    
-                   });
+
+                  });
 
                 //add a value label to the right of each bar
                 bars.append("text")
@@ -415,10 +428,10 @@ setTimeout(() => {
                   })
                   //x position is 3 pixels to the right of the bar
                   .attr("x", function (d) {
-                    
+
 
                     if (d.position == 1) {
-                      
+
                       return x(3) + 3;
                     } else if (d.position == 2) {
                       return x(d.position) + 3;
@@ -428,12 +441,12 @@ setTimeout(() => {
                   })
                   .text(function (d) {
                     if (d.position == 1) {
-                      
+
                       return "1er";
                     } else if (d.position == 2) {
-                      return "2ème";
+                      return "2e";
                     } else {
-                      return "3ème";
+                      return "3e";
                     }
                   });
 
@@ -444,7 +457,7 @@ setTimeout(() => {
                   .attr("x", 0)
                   .attr("width", function (d) {
                     if (d.position == 1) {
-                      
+
                       return x(3);
                     } else if (d.position == 2) {
                       return x(d.position);
@@ -453,9 +466,9 @@ setTimeout(() => {
                     }
 
                   })
-                  
-                  
-                  
+
+
+
                   .delay(function (d, i) { console.log(i); return (i * 100) });
 
 
@@ -464,6 +477,107 @@ setTimeout(() => {
 
                 console.log("add");
 
+
+
+                //---------------------------------------------------------------------------
+                //Speedometer
+
+                var BestAverageSpeed = 0;
+                console.log(BestAverageSpeed);
+                console.log(resultTab);
+                for (var i = 0; i < resultTab.length; i++) {
+
+                  if (BestAverageSpeed < resultTab[i].FastestLap.AverageSpeed.speed) {
+
+
+                    BestAverageSpeed = resultTab[i].FastestLap.AverageSpeed.speed;
+                  }
+
+
+                }
+
+                console.log(BestAverageSpeed);
+
+                //document.getElementById("BestAverageSpeed").textContent = BestAverageSpeed ;
+
+
+
+                // Data
+                var value = (BestAverageSpeed / 260);
+                var text = BestAverageSpeed + 'Km/h'
+                var data = [value, 1 - value]
+
+                // Settings
+                var width = 250
+                var height = 150
+                var anglesRange = 0.5 * Math.PI
+                var radis = Math.min(width, 2 * height) / 2
+                var thickness = 50
+
+                var duration = 1500;
+                var transition = 200;
+                //var percent = 45;
+                // Utility 
+                //     var colors = d3.scale.category10();
+                var colors = ["#cc0000", "#F5F5F5"]
+
+                var pies = d3.pie()
+                  .value(d => d)
+                  .sort(null)
+                  .startAngle(anglesRange * -1)
+                  .endAngle(anglesRange)
+
+                var arc = d3.arc()
+                  .outerRadius(radis)
+                  .innerRadius(radis - thickness)
+
+                var translation = (x, y) => `translate(${x}, ${y})`
+
+                // Feel free to change or delete any of the code you see in this editor!
+                var svg = d3.select("#BestAverageSpeed").append("svg")
+                  .attr("width", width)
+                  .attr("height", height)
+                  .attr("class", "half-donut")
+                  .append("g")
+                  .attr("transform", translation(width / 2, height))
+
+
+                svg.selectAll("path")
+                  .data(pies(data))
+                  .enter()
+                  .append("path")
+                  .attr("fill", (d, i) => colors[i])
+                  .attr("d", arc)
+
+
+                svg.append("text")
+                  .text(d => text)
+                  .attr("dy", "-3rem")
+                  .attr("class", "label")
+                  .attr("text-anchor", "middle")
+
+
+/*
+                var progress = 0;
+
+                var timeout = setTimeout(function () {
+                  clearTimeout(timeout);
+                  path = path.data(pie(dataset.upper));
+                  path.transition().duration(duration).attrTween("d", function (a) {
+                    var i = d3.interpolate(this._current, a);
+                    var i2 = d3.interpolate(progress, value)
+                    this._current = i(0);
+                    return function (t) {
+                      text.text(format(i2(t) / 100));
+                      return arc(i(t));
+                    };
+                  });
+                }, 200);*/
+
+
+
+                //Speedometer
+                //---------------------------------------------------------------------------
 
 
               }
