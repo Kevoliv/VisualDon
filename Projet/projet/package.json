@@ -1,5 +1,5 @@
 {
-  "name": "leaflet-starter",
+  "name": "formula-kevoliv",
   "description": "Mise en place leaflet",
   "scripts": {
     "build": "rollup -c",
