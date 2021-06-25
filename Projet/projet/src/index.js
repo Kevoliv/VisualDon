@@ -121,7 +121,7 @@ L.tileLayer(
   'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.{ext}',
   {
     attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
-    subdomains: 'abcd',
+    subdomains: 'kevoliv',
     minZoom: 3,
     maxZoom: 20,
     ext: 'png',
