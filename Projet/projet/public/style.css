@@ -21,16 +21,32 @@ html,body {
       margin-left: 5%;
       margin-right: 5%;
 
+margin-bottom: 10px;
     }
 
     h2{
 
+      text-align: center;
       font-weight: 700;
       font-size: 1.5rem;
       margin-left: 5%;
       margin-right: 5%;
 
+      display: inline;
 
+    }
+    h3{
+
+      font-weight: 400;
+      display: inline;
+      
+
+    }
+    #sousTitre{
+
+      top: 0px;
+      
+      margin-left: 5%;
     }
     p{
 
@@ -42,8 +58,10 @@ html,body {
 
 .slidecontainer {
     width: 12vw; /* Width of the outside container */
-  
-    
+  left: 130px;
+  top: 50px;
+    position: absolute;
+    z-index: 9999;
   
   }
   
@@ -74,7 +92,7 @@ html,body {
     width: 25px;
     height: 25px;
     border-radius: 50%; 
-    background: #04AA6D;
+    background: #da0101;
     cursor: pointer;
   }
   
@@ -101,16 +119,37 @@ html,body {
     height: 700px;
 
   }
+
+
+
+  .container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 5px 5px;
+    grid-auto-flow: row;
+    grid-template-areas:
+      "Wiki Wiki"
+      "Podium Stats"
+      "Podium Stats";
+  }
+  
+  .Wiki { grid-area: Wiki; }
+  
+  .Podium { grid-area: Podium; margin-left: 5%;}
+  
+  .Stats { grid-area: Stats; }
+  
 /*-------------------------------------------------------*/
   
 #podium{
 
   /*background-color: fuchsia;*/
-  width: 50% ;
+  width: 40% ;
 }
 
 .bar {
-  fill: #5f89ad;
+  
 }
 
 .axis {

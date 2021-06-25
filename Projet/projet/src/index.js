@@ -36,7 +36,7 @@ slider.oninput = function () {
   console.log(year);
   fetchData();
   fetchDataResults()
-  
+
 
 
 }
@@ -287,9 +287,12 @@ setTimeout(() => {
           // console.log(ret);
           document.getElementById("titre").textContent = f1DataLive.MRData.CircuitTable.Circuits[i].circuitName;
 
+          document.getElementById("pays").textContent = f1DataLive.MRData.CircuitTable.Circuits[i].Location.country;
+
+          document.getElementById("city").textContent = " | " + f1DataLive.MRData.CircuitTable.Circuits[i].Location.locality;
 
 
-         
+
 
           setTimeout(() => {
 
@@ -323,11 +326,14 @@ setTimeout(() => {
                   top: 15,
                   right: 25,
                   bottom: 15,
-                  left: 60
+                  left: 80
                 };
 
-                var width = 300 - margin.left - margin.right,
-                  height = 300 - margin.top - margin.bottom;
+                //var colors = ['#FFD700', '#CECECE','#614E1A'];
+               // var colors = ['#884DA7', '#CECECE','#614E1A'];
+
+                var width = 250 - margin.left - margin.right,
+                  height = 250 - margin.top - margin.bottom;
 
                 var svg = d3.select("#podium").append("svg")
                   .attr("width", width + margin.left + margin.right)
@@ -335,19 +341,20 @@ setTimeout(() => {
                   // .attr("width", 400)
                   // .attr("height", 200)
                   .append("g")
+                  
                   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
                 var x = d3.scaleLinear()
                   .range([0, width])
                   .domain([0, d3.max(resultPodium, function (d) {
-                    return d.points;
+                    return d.position;
                   })]);
 
                 var y = d3.scaleBand()
                   .rangeRound([0, height])
                   .padding(0.1)
                   .domain(resultPodium.map(function (d) {
-                    return d.Driver.code;
+                    return d.Driver.familyName;
                   }));
 
                 //make y axis to show bar names
@@ -361,70 +368,109 @@ setTimeout(() => {
                 var bars = svg.selectAll(".bar")
                   .data(resultPodium)
                   .enter()
-                  .append("g")
                   
+                    
+                    
+                  .append("g")
+
 
                 //append rects
                 bars.append("rect")
                   .attr("class", "bar")
                   .attr("y", function (d) {
-                    return y(d.Driver.code);
+                    return y(d.Driver.familyName);
                   })
                   .attr("height", y.bandwidth())
                   .attr("x", 0)
                   .attr("width", function (d) {
-                    return x(d.points);
-                  });
+                    if (d.position == 1) {
+                      return x(0);
+                    } else if (d.position == 2) {
+                      return x(0);
+                    } else {
+                      return x(0);
+                    }
+
+                  })
+                  .attr("fill", function(d) { 
+                    
+
+                    if (d.position == 1) {
+                      return '#FFD700';
+                    } else if (d.position == 2) {
+                      return '#CECECE';
+                    } else {
+                      return '#614E1A';
+                    }
+
+                    
+                   });
 
                 //add a value label to the right of each bar
                 bars.append("text")
                   .attr("class", "label")
                   //y position of the label is halfway down the bar
                   .attr("y", function (d) {
-                    return y(d.Driver.code) + y.bandwidth() / 2 + 4;
+                    return y(d.Driver.familyName) + y.bandwidth() / 2 + 4;
                   })
                   //x position is 3 pixels to the right of the bar
                   .attr("x", function (d) {
-                    return x(d.points) + 3;
+                    
+
+                    if (d.position == 1) {
+                      
+                      return x(3) + 3;
+                    } else if (d.position == 2) {
+                      return x(d.position) + 3;
+                    } else {
+                      return x(1) + 3;
+                    }
                   })
                   .text(function (d) {
-                    return d.position;
+                    if (d.position == 1) {
+                      
+                      return "1er";
+                    } else if (d.position == 2) {
+                      return "2ème";
+                    } else {
+                      return "3ème";
+                    }
                   });
+
+                svg.selectAll("rect")
+                  .transition()
+                  .duration(800)
+                  .attr("height", y.bandwidth())
+                  .attr("x", 0)
+                  .attr("width", function (d) {
+                    if (d.position == 1) {
+                      
+                      return x(3);
+                    } else if (d.position == 2) {
+                      return x(d.position);
+                    } else {
+                      return x(1);
+                    }
+
+                  })
+                  
+                  
+                  
+                  .delay(function (d, i) { console.log(i); return (i * 100) });
+
+
+
 
 
                 console.log("add");
 
 
 
-
-
-
-
-
-
-
-
-
               }
-
-
-
-
-
-
-
-
-
-
-
 
 
             }
           }, 700);
-
-
-
-
 
         }
 
