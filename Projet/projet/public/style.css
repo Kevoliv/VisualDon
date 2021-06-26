@@ -147,6 +147,14 @@ margin-bottom: 10px;
   /*background-color: fuchsia;*/
   width: 40% ;
 }
+#year{
+
+  z-index: 9999;
+  position: absolute;
+  color: white;
+  text-align: center;
+  margin-left: 4vw;
+}
 
 .bar {
   
@@ -164,6 +172,10 @@ margin-bottom: 10px;
 
 .label {
   font-size: 13px;
+}
+.leaflet-control-layers{
+  
+visibility: hidden;
 }
 
 
