@@ -21,7 +21,7 @@ html,body {
       margin-left: 5%;
       margin-right: 5%;
 
-margin-bottom: 10px;
+      margin-bottom: 10px;
     }
 
     h2{
@@ -41,6 +41,15 @@ margin-bottom: 10px;
       display: inline;
       
 
+    }
+    #explain{
+
+      position: absolute;
+      z-index: 9999;
+      color: white;
+
+      width: 20vw;
+      bottom: 30px;
     }
     #sousTitre{
 
