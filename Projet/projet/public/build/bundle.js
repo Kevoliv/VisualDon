@@ -34913,7 +34913,7 @@
 	      loc = leafletSrc.marker([f1DataLive.MRData.CircuitTable.Circuits[i].Location.lat, f1DataLive.MRData.CircuitTable.Circuits[i].Location.long], { icon });
 	      layerGroup.addLayer(loc);
 
-	      
+
 	      loc.bindPopup(leafletSrc.popup().setContent(f1DataLive.MRData.CircuitTable.Circuits[i].circuitName));
 	      loc.on("mouseover", function (evt) { this.openPopup(); });
 	      loc.on("mouseout", function (evt) { this.closePopup(); });
@@ -34945,7 +34945,7 @@
 	      circuitID = f1DataLive.MRData.CircuitTable.Circuits[i].circuitId;
 	      console.log(circuitID);
 	      $.ajax({
-	        url: "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&titles=" + ret + "&exsentences=4&exintro=1&explaintext=1&exsectionformat=plain&origin=*&redirects",
+	        url: "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&titles=" + ret + "&exsentences=3&exintro=1&explaintext=1&exsectionformat=plain&origin=*&redirects",
 	        dataType: "json",
 	        success: function (data) {
 
@@ -35027,13 +35027,26 @@
 	              top: 15,
 	              right: 25,
 	              bottom: 15,
-	              left: 80
+	              left: 110
 	            };
-
+	            /*
+	                        var tooltip = d3
+	                          .select('body')
+	                          .append('div')
+	                          .attr('class', 'd3-tooltip')
+	                          .style('position', 'absolute')
+	                          .style('z-index', '10')
+	                          .style('visibility', 'hidden')
+	                          .style('padding', '10px')
+	                          .style('background', 'rgba(0,0,0,0.6)')
+	                          .style('border-radius', '4px')
+	                          .style('color', '#fff')
+	                          .text('a simple tooltip');
+	            */
 	            //var colors = ['#FFD700', '#CECECE','#614E1A'];
 	            // var colors = ['#884DA7', '#CECECE','#614E1A'];
 
-	            var width = 250 - margin.left - margin.right,
+	            var width = 230 - margin.left - margin.right,
 	              height = 250 - margin.top - margin.bottom;
 
 	            var svg = select("#podium").append("svg")
@@ -35045,6 +35058,22 @@
 
 	              .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+
+	/*
+
+	            // create a tooltip
+	            var tooltip = d3.select("#podium")
+	              .append("div")
+	              .style("position", "absolute")
+	              .style("visibility", "hidden")
+	              .text("I'm a circle!");
+
+	            //
+	            d3.select(".bar")
+	              .on("mouseover", function (d) { return tooltip.style("visibility", "visible"); })
+	              .on("mousemove", function (d) { return tooltip.style("top", (d) + "px").style("left", (d) + "px"); })
+	              .on("mouseout", function (d) { return tooltip.style("visibility", "hidden"); });
+	*/
 	            var x = linear()
 	              .range([0, width])
 	              .domain([0, max$1(resultPodium, function (d) {
@@ -35055,31 +35084,38 @@
 	              .rangeRound([0, height])
 	              .padding(0.1)
 	              .domain(resultPodium.map(function (d) {
-	                return d.Driver.familyName;
+	                return d.Driver.givenName + " " + d.Driver.familyName;
 	              }));
 
 	            //make y axis to show bar names
 	            var yAxis = axisLeft(y);
+	            
 
 
 	            svg.append("g")
 	              .attr("class", "y axis")
+	              
 	              .call(yAxis);
+	              
+	              
 
 	            var bars = svg.selectAll(".bar")
 	              .data(resultPodium)
 	              .enter()
+	              
 
 
 
 	              .append("g");
+	              
 
 
-	            //append rects
+
+	            //append rects <p id="PasDispoP">Données pas disponibles</p>
 	            bars.append("rect")
 	              .attr("class", "bar")
 	              .attr("y", function (d) {
-	                return y(d.Driver.familyName);
+	                return y(d.Driver.givenName + " " + d.Driver.familyName);
 	              })
 	              .attr("height", y.bandwidth())
 	              .attr("x", 0)
@@ -35112,7 +35148,7 @@
 	              .attr("class", "label")
 	              //y position of the label is halfway down the bar
 	              .attr("y", function (d) {
-	                return y(d.Driver.familyName) + y.bandwidth() / 2 + 4;
+	                return y(d.Driver.givenName + " " + d.Driver.familyName) + y.bandwidth() / 2 + 4;
 	              })
 	              //x position is 3 pixels to the right of the bar
 	              .attr("x", function (d) {
@@ -35138,6 +35174,10 @@
 	                }
 	              });
 
+	             
+	            
+
+
 	            svg.selectAll("rect")
 	              .transition()
 	              .duration(800)
@@ -35154,11 +35194,16 @@
 	                }
 
 	              })
+	              
 
 
 
 	              .delay(function (d, i) { console.log(i); return (i * 100) });
 
+
+
+
+	              
 
 
 
@@ -35240,6 +35285,7 @@
 	              .attr("dy", "-3rem")
 	              .attr("class", "label")
 	              .attr("text-anchor", "middle");
+
 
 
 	            /*

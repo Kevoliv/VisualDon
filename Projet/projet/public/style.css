@@ -50,6 +50,16 @@ html,body {
 
       width: 20vw;
       bottom: 30px;
+      
+    
+      
+    }
+    #PasDispoP{
+
+      visibility: hidden;
+      color: #2c2c2c;
+      margin-left: 10%;
+      width: 10vw;
     }
     #sousTitre{
 
@@ -122,10 +132,12 @@ html,body {
     visibility: hidden;
     z-index: 999;
     width: 30vw;
-    min-width: 400px;
+    min-width: 485px;
     top: 15%;
     right: 100px ;
-    height: 700px;
+    height: 70%;
+    min-height: 600px;
+    max-height: min-content;
 
   }
 
@@ -170,7 +182,8 @@ html,body {
 }
 
 .axis {
-  font-size: 13px;
+  font-size: 60%;
+  font-weight: 600;
 }
 
 .axis path,
