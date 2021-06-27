@@ -2,14 +2,6 @@ import L, { marker } from 'leaflet'
 import circuit_trace from './circuit_trace.json'
 import * as d3 from 'd3'
 
-
-
-
-
-
-
-//const map = L.map('map').setView([45.62218251898255, 9.284766257898681], 14)
-
 const map = L.map('map').setView([15, 0], 3)
 var f1DataLive;
 var result;
@@ -24,16 +16,12 @@ var myStyle = {
   "weight": 8,
   "opacity": 0.65
 };
+
 var slider = document.getElementById("myRange");
-//output.innerHTML = slider.value; // Display the default slider value
 var year = 2021;
 document.getElementById("year").textContent = year;
 // Update the current slider value (each time you drag the slider handle)
 slider.onchange = function () {
-
-  //map.removeLayer();
-  //const map = L.map('map')
-
 
   map.removeLayer(layerGroup);
   map.eachLayer(function (layer) {
@@ -41,34 +29,19 @@ slider.onchange = function () {
       map.removeLayer(layer);
 
     }
-    //console.log(layer);
-
-
+    
   });
   year = this.value;
-  console.log("Changed !");
-
-
+  //console.log("Changed !");
   fetchData();
   fetchDataResults()
   addMarker();
-
-
 }
 slider.oninput = function () {
-
-  //map.removeLayer();
-  //const map = L.map('map')
-
 
   year = this.value;
   console.log(year);
   document.getElementById("year").textContent = year;
-
-  //fetchData();
-  //fetchDataResults()
-
-
 
 }
 
@@ -79,7 +52,6 @@ function fetchData() {
     .then(data => f1DataLive = data)
     .then(data => console.log("Circuit: " + data))
 
-
 }
 
 
@@ -89,63 +61,10 @@ function fetchDataResults() {
     .then(r => r.json())
     .then(data => result = data)
     .then(data => console.log("Result: " + data))
-
-
+    
 }
 
-/*let isCacheSupported = 'caches' in window;
- 
- 
-let cacheName = 'f1DataCache';
-//let url = "http://ergast.com/api/f1/" + year + "/circuits.json?limit=100";
-caches.open(cacheName).then(cache => {
-  cache.add(url).then(() => {
-    console.log("Data cached ")
-  });
-});
- 
- 
-function getData(){
- 
- 
-}
- 
- 
- 
- 
-console.log(year);
- 
- 
- 
- 
-caches.open(cacheName).then(cache => {
-  cache.match(url).then(settings => {
-    console.log(settings);
- 
-    
- 
- 
- 
-  })
-});
- 
- 
 
- 
- 
- 
-$.ajax({
-  url: "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&titles=Algarve_International_Circuit&exsentences=4&exintro=1&explaintext=1&exsectionformat=plain",
-  dataType: "json",
-  success: function (data) {
-    console.log(data.query);
-    
-  },
-  error: function (xhr) {
-    alert(xhr.statusText)
-  }
-})
-*/
 L.tileLayer(
   // 'https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}{r}.{ext}',
   //'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.{ext}',
@@ -165,7 +84,6 @@ const icon = L.icon({
   iconAnchor: [15, 30],
 })
 
-
 map.on('moveend', function () {
   console.log(map.getZoom());
   if (map.getZoom() <= 12) {
@@ -179,15 +97,7 @@ map.on('moveend', function () {
     });
   }
   if (map.getZoom() > 12) {
-
-    console.log("yup");
-
-
-
-
-
-
-    //document.getElementById("info").style.visibility = "visible";
+    //console.log("yup");
     multipolygon = L.geoJSON(
       circuit_trace, {
       style: myStyle
@@ -197,41 +107,12 @@ map.on('moveend', function () {
 });
 
 
-
-/*
-arbres.map(d => {
-  const [lon, lat] = d
-  L.marker([lat, lon], { icon }).addTo(map).bindPopup(test.MRData.CircuitTable.Circuits[i].circuitName)
-})*/
-
-
-
-/*
-Ajout tracé circuit
-L.geoJSON(
-  circuit_trace, {
-  style: myStyle
-}
-).addTo(map).on('click', function (e) {
-
-  document.getElementById("info").style.visibility = "visible";
-  //console.log(L.Marker)
-
-
-  
-  // flyTo([test.MRData.CircuitTable.Circuits[2].Location.lat, test.MRData.CircuitTable.Circuits[2].Location.long], 12);
-});*/
-
-
 function clean_map() {
   map.eachLayer(function (layer) {
     if (layer instanceof L.GeoJSON) {
       map.removeLayer(layer);
-
     }
     //console.log(layer);
-
-
   });
 
   d3.selectAll("#podium svg").remove();
@@ -239,68 +120,22 @@ function clean_map() {
 
 }
 
-
-
-
-
-/*
-$.ajax({
-  url: "http://ergast.com/api/f1/" + year + "/circuits.json?limit=100",
-  dataType: "json",
-  async: false,
-  success: function (data) {
-    console.log("success");
-    console.log(data);
-    // f1DataLive = data; 
-    // !!!STORE!!!
-    console.log(f1DataLive);
-    //getDataF1(data);
-
-
-    for (var i = 0; i < data.MRData.CircuitTable.Circuits.length; i++) {
-      L.marker([data.MRData.CircuitTable.Circuits[i].Location.lat, data.MRData.CircuitTable.Circuits[i].Location.long], { icon }).addTo(map).bindPopup(data.MRData.CircuitTable.Circuits[i].circuitName);
-    }
-  },
-  error: function (xhr) {
-    alert(xhr.statusText)
-  }
-})
-*/
-
-
-
-
-
-
-
-
-//console.log(testLive);
-
-
 // Cacher le pop up d'information
 function onMapClick(e) {
 
   document.getElementById("info").style.visibility = "hidden";
   map.flyTo([15, 0], 3, { 'duration': 1.2 });
-
-
   clean_map();
-
-
-  console.log("clean");
+  //console.log("clean");
 }
-
-
-
-
 
 // Afficher la popup d'information
 map.on('click', onMapClick);
-
 fetchData();
 fetchDataResults()
 addMarker();
-//fetchDataResults();
+
+
 
 function addMarker() {
 
@@ -314,12 +149,9 @@ function addMarker() {
 
       loc = L.marker([f1DataLive.MRData.CircuitTable.Circuits[i].Location.lat, f1DataLive.MRData.CircuitTable.Circuits[i].Location.long], { icon });
       layerGroup.addLayer(loc)
-
-
       loc.bindPopup(L.popup().setContent(f1DataLive.MRData.CircuitTable.Circuits[i].circuitName));
       loc.on("mouseover", function (evt) { this.openPopup(); });
       loc.on("mouseout", function (evt) { this.closePopup(); });
-
       loc.on('click', function (e) { showInfo(e) });
 
     }
@@ -330,16 +162,9 @@ function addMarker() {
   L.control.layers(null, overlay).addTo(map);
 }
 
-
 function showInfo(e) {
-
-
-
-  //layerGroup.addLayer(loc);
   clean_map();
   for (var i = 0; i < f1DataLive.MRData.CircuitTable.Circuits.length; i++) {
-
-
 
     if (e.latlng.lng == f1DataLive.MRData.CircuitTable.Circuits[i].Location.long) {
       var ret = f1DataLive.MRData.CircuitTable.Circuits[i].url.replace("http:\/\/en.wikipedia.org\/wiki\/", "");
@@ -356,18 +181,7 @@ function showInfo(e) {
             pageid.push(id);
           }
 
-
-          //var a = document.createElement('a');
-          //var linkText = document.createTextNode("my title text");
           document.getElementById("intro").textContent = data.query.pages[pageid[0]].extract;
-          //a.appendChild(document.getElementById("intro"));
-          //a.title = "Lire plus";
-          // a.href = f1DataLive.MRData.CircuitTable.Circuits[i].url;
-          // var intro =  + "<a href=" + f1DataLive.MRData.CircuitTable.Circuits[i].url + "> lire plus</a>";
-          //console.log(data.query.pages[pageid[0]].extract);
-
-          // document.body.appendChild(a);
-
           multipolygon = L.geoJSON(
             circuit_trace, {
             style: myStyle
@@ -375,9 +189,7 @@ function showInfo(e) {
           setTimeout(() => {
             multipolygon.addTo(map);
           }, 1000);
-          /**/
-
-
+         
         },
         error: function (xhr) {
           alert(xhr.statusText)
@@ -386,17 +198,10 @@ function showInfo(e) {
 
       // console.log(ret);
       document.getElementById("titre").textContent = f1DataLive.MRData.CircuitTable.Circuits[i].circuitName;
-
       document.getElementById("country").textContent = f1DataLive.MRData.CircuitTable.Circuits[i].Location.country;
-
       document.getElementById("city").textContent = " | " + f1DataLive.MRData.CircuitTable.Circuits[i].Location.locality;
 
-
-
-
       setTimeout(() => {
-
-        // console.log("test "+ result.MRData);
 
         for (var i = 0; i < result.MRData.RaceTable.Races.length; i++) {
           //console.log(result.MRData.RaceTable.Races[i].Circuit.circuitId)
@@ -411,17 +216,9 @@ function showInfo(e) {
 
 
             */
-
-            // var resultTab = resultat.MRData.RaceTable.Races[i].Results;
-
-
-
             var resultTab = result.MRData.RaceTable.Races[i].Results;
-
             const resultPodium = resultTab.filter(resultTab => resultTab.position < 4);
-
             console.log(resultPodium);
-
             //console.log(result);
 
             //set up svg using margin conventions - we'll need plenty of room on the left for labels
@@ -431,22 +228,6 @@ function showInfo(e) {
               bottom: 15,
               left: 110
             };
-            /*
-                        var tooltip = d3
-                          .select('body')
-                          .append('div')
-                          .attr('class', 'd3-tooltip')
-                          .style('position', 'absolute')
-                          .style('z-index', '10')
-                          .style('visibility', 'hidden')
-                          .style('padding', '10px')
-                          .style('background', 'rgba(0,0,0,0.6)')
-                          .style('border-radius', '4px')
-                          .style('color', '#fff')
-                          .text('a simple tooltip');
-            */
-            //var colors = ['#FFD700', '#CECECE','#614E1A'];
-            // var colors = ['#884DA7', '#CECECE','#614E1A'];
 
             var width = 230 - margin.left - margin.right,
               height = 250 - margin.top - margin.bottom;
@@ -454,28 +235,9 @@ function showInfo(e) {
             var svg = d3.select("#podium").append("svg")
               .attr("width", width + margin.left + margin.right)
               .attr("height", height + margin.top + margin.bottom)
-              // .attr("width", 400)
-              // .attr("height", 200)
               .append("g")
-
               .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
-
-/*
-
-            // create a tooltip
-            var tooltip = d3.select("#podium")
-              .append("div")
-              .style("position", "absolute")
-              .style("visibility", "hidden")
-              .text("I'm a circle!");
-
-            //
-            d3.select(".bar")
-              .on("mouseover", function (d) { return tooltip.style("visibility", "visible"); })
-              .on("mousemove", function (d) { return tooltip.style("top", (d) + "px").style("left", (d) + "px"); })
-              .on("mouseout", function (d) { return tooltip.style("visibility", "hidden"); });
-*/
             var x = d3.scaleLinear()
               .range([0, width])
               .domain([0, d3.max(resultPodium, function (d) {
@@ -491,28 +253,16 @@ function showInfo(e) {
 
             //make y axis to show bar names
             var yAxis = d3.axisLeft(y)
-            
-
-
+         
             var gy = svg.append("g")
               .attr("class", "y axis")
-              
               .call(yAxis)
               
-              
-
             var bars = svg.selectAll(".bar")
               .data(resultPodium)
               .enter()
-              
-
-
-
               .append("g")
               
-
-
-
             //append rects <p id="PasDispoP">Données pas disponibles</p>
             bars.append("rect")
               .attr("class", "bar")
@@ -533,7 +283,6 @@ function showInfo(e) {
               })
               .attr("fill", function (d) {
 
-
                 if (d.position == 1) {
                   return '#FFD700';
                 } else if (d.position == 2) {
@@ -541,7 +290,6 @@ function showInfo(e) {
                 } else {
                   return '#614E1A';
                 }
-
 
               });
 
@@ -554,7 +302,6 @@ function showInfo(e) {
               })
               //x position is 3 pixels to the right of the bar
               .attr("x", function (d) {
-
 
                 if (d.position == 1) {
 
@@ -576,10 +323,6 @@ function showInfo(e) {
                 }
               });
 
-             
-            
-
-
             svg.selectAll("rect")
               .transition()
               .duration(800)
@@ -596,23 +339,10 @@ function showInfo(e) {
                 }
 
               })
-              
-
-
-
               .delay(function (d, i) { console.log(i); return (i * 100) });
 
 
-
-
-              
-
-
-
-
-            console.log("add");
-
-
+           // console.log("add");
 
             //---------------------------------------------------------------------------
             //Speedometer
@@ -624,18 +354,12 @@ function showInfo(e) {
 
               if (BestAverageSpeed < resultTab[i].FastestLap.AverageSpeed.speed) {
 
-
                 BestAverageSpeed = resultTab[i].FastestLap.AverageSpeed.speed;
               }
 
-
             }
 
-            console.log(BestAverageSpeed);
-
-            //document.getElementById("BestAverageSpeed").textContent = BestAverageSpeed ;
-
-
+           // console.log(BestAverageSpeed);
 
             // Data
             var value = (BestAverageSpeed / 260);
@@ -651,9 +375,7 @@ function showInfo(e) {
 
             var duration = 1500;
             var transition = 200;
-            //var percent = 45;
-            // Utility 
-            //     var colors = d3.scale.category10();
+           
             var colors = ["#cc0000", "#F5F5F5"]
 
             var pies = d3.pie()
@@ -676,7 +398,6 @@ function showInfo(e) {
               .append("g")
               .attr("transform", translation(width / 2, height))
 
-
             svg.selectAll("path")
               .data(pies(data))
               .enter()
@@ -684,37 +405,14 @@ function showInfo(e) {
               .attr("fill", (d, i) => colors[i])
               .attr("d", arc)
 
-
             svg.append("text")
               .text(d => text)
               .attr("dy", "-3rem")
               .attr("class", "label")
               .attr("text-anchor", "middle")
 
-
-
-            /*
-                            var progress = 0;
-            
-                            var timeout = setTimeout(function () {
-                              clearTimeout(timeout);
-                              path = path.data(pie(dataset.upper));
-                              path.transition().duration(duration).attrTween("d", function (a) {
-                                var i = d3.interpolate(this._current, a);
-                                var i2 = d3.interpolate(progress, value)
-                                this._current = i(0);
-                                return function (t) {
-                                  text.text(format(i2(t) / 100));
-                                  return arc(i(t));
-                                };
-                              });
-                            }, 200);*/
-
-
-
             //Speedometer
             //---------------------------------------------------------------------------
-
 
           }
 
@@ -727,21 +425,10 @@ function showInfo(e) {
   }
 
   document.getElementById("info").style.visibility = "visible";
-  console.log(e.latlng.lng);
-
-
-  // var info = document.getElementById("info")
-  //info.textContent += 'hello world !';
-
-  //console.log("buind");
-  //console.log(multipolygon.getBounds());
-
+  //console.log(e.latlng.lng);
   map.flyTo(e.latlng, 15, { 'duration': 1.2 });
-  //map.flyToBounds(e.latlng,e.latlng, 15, {'duration':1.2});
-  // flyTo([test.MRData.CircuitTable.Circuits[2].Location.lat, test.MRData.CircuitTable.Circuits[2].Location.long], 12);
-
+  
 }
-
 
 //---------------------------------------------------------------------------
 
