@@ -163,7 +163,7 @@ L.tileLayer(
   .addTo(map)
 
 const icon = L.icon({
-  iconUrl: '/images/location.png',
+  iconUrl: 'images/location.png',
   iconSize: [30, 30],
   iconAnchor: [15, 30],
 })
