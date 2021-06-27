@@ -77,7 +77,7 @@ slider.oninput = function () {
 
 function fetchData() {
 
-  fetch("http://ergast.com/api/f1/" + year + "/circuits.json?limit=100")
+  fetch("https://ergast.com/api/f1/" + year + "/circuits.json?limit=100")
     .then(r => r.json())
     .then(data => f1DataLive = data)
     .then(data => console.log("Circuit: " + data))
@@ -88,7 +88,7 @@ function fetchData() {
 
 function fetchDataResults() {
 
-  fetch("http://ergast.com/api/f1/" + year + "/results.json?limit=1000")
+  fetch("https://ergast.com/api/f1/" + year + "/results.json?limit=1000")
     .then(r => r.json())
     .then(data => result = data)
     .then(data => console.log("Result: " + data))
