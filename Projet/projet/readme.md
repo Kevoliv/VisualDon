@@ -1,7 +1,7 @@
 # Projet VisualDon | Kevin Oliveira Paiva
 ## Visualisation des résultats en F1 en fonction des années.
 
-### [f1.kople.ch](https://f1.kople.ch)
+### Site web réalisé seul: [f1.kople.ch](https://f1.kople.ch)
 
 ## Provenance des données
 
@@ -15,11 +15,20 @@ Dans mon cas, pour récupérer les différentes informations des circuits utilis
 Pour les résultats des courses ayant eu lieu, j'ai procédé de la même manière. Voici un url d'exemple:
 https://ergast.com/api/f1/2021/results.json?limit=1000
 
+Concernant la mise à jour des données, lorsqu'il y a une course qui s'est terminée, les données de la courses sont disponible directement après quelques heures.
+
 
 ### Données du tracé des circuits
 Pour avoir la possibilité de voir le tracé de certains circuits, j'ai trouvé une autre petite base de données dédié à cela: https://github.com/bacinger/f1-circuits
+
+Par contre, c'est bien une base de donnée statique ( pas de mises à jours automatique).
 
 ### Données de la carte leaflet
 Finalement, la carte que j'ai utilisé (Carto DarkMatter) avec leaflet provient de Carto.com . Je l'avais trouvé via ce site: https://leaflet-extras.github.io/leaflet-providers/preview/#filter=CartoDB.DarkMatter
 
 Cette carte est [gratuite](https://carto.com/pricing/) pendant un an en utilisant des ressources "public" (Avec une limitation ), pour continuer à l'utiliser, il faudra payer en fonction des besoins et du trafic web.
+
+
+## Choix graphique
+
+### 
