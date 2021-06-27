@@ -350,7 +350,7 @@ function showInfo(e) {
       circuitID = f1DataLive.MRData.CircuitTable.Circuits[i].circuitId;
       console.log(circuitID);
       $.ajax({
-        url: "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&titles=" + ret + "&exsentences=4&exintro=1&explaintext=1&exsectionformat=plain&redirects",
+        url: "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&titles=" + ret + "&exsentences=4&exintro=1&explaintext=1&exsectionformat=plain&origin=*&redirects",
         dataType: "json",
         success: function (data) {
 
