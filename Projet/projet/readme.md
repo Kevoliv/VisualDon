@@ -1,6 +1,8 @@
 # Projet VisualDon | Kevin Oliveira Paiva
 ## Visualisation des résultats en F1 en fonction des années.
 
+Ce site web permet de naviguer sur la carte du monde à travers les années (de 1950 à aujourd'hui) pour pouvoir voir les différents podiums (les trois premiers d'une course) et vitesses moyennes de chaque circuit.
+
 ### Site web réalisé seul: [f1.kople.ch](https://f1.kople.ch)
 
 ## Provenance des données
@@ -11,6 +13,8 @@ Pour réaliser ce site web, j'ai trouvé une grande base de données qui regroup
 Les données sont directement téléchargé depuis l'api que fourni gratuitement ergast. J'ai pu télécharger à travers des liens spécifiques pour ne télécharger uniquement certaines données. 
 
 Dans mon cas, pour récupérer les différentes informations des circuits utilisés en 2021, voici un exemple d'url (J'ai pu tout simplement changer l'année depuis le lien): https://ergast.com/api/f1/2021/circuits.json?limit=100
+
+Les années sont changées grâce 
 
 ```javascript
 fetch("https://ergast.com/api/f1/" + year + "/circuits.json?limit=100")
