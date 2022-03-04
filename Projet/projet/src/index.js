@@ -23,7 +23,7 @@ var dynYear = document.querySelector('input[id="myRange"]');
 console.log(dynYear.value);
 dynYear.value = "2022";
 dynYear.max = "2022";
-console.log(Myelement.value);
+console.log(dynYear.value);
 
 
 document.getElementById("year").textContent = year;
