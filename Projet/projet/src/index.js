@@ -18,7 +18,7 @@ var myStyle = {
 };
 
 var slider = document.getElementById("myRange");
-var year = 2021;
+var year = new Date().getFullYear();  // returns the current year;
 document.getElementById("year").textContent = year;
 // Update the current slider value (each time you drag the slider handle)
 slider.onchange = function () {
