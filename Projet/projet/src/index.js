@@ -46,7 +46,7 @@ slider.onchange = function () {
 slider.oninput = function () {
 
   year = this.value;
-  console.log(year);
+  //console.log(year);
   document.getElementById("year").textContent = year;
   
 
@@ -92,9 +92,9 @@ const icon = L.icon({
 })
 
 map.on('moveend', function () {
-  console.log(map.getZoom());
+  //console.log(map.getZoom());
   if (map.getZoom() <= 12) {
-    console.log("nope");
+    //console.log("nope");
     document.getElementById("info").style.visibility = "hidden";
     map.eachLayer(function (layer) {
       if (layer instanceof L.GeoJSON) {
@@ -150,7 +150,7 @@ function addMarker() {
 
   setTimeout(() => {
 
-    console.log("CircuitTime: " + f1DataLive.MRData.CircuitTable.Circuits.length)
+    //console.log("CircuitTime: " + f1DataLive.MRData.CircuitTable.Circuits.length)
 
     for (var i = 0; i < f1DataLive.MRData.CircuitTable.Circuits.length; i++) {
 
@@ -177,7 +177,7 @@ function showInfo(e) {
       var ret = f1DataLive.MRData.CircuitTable.Circuits[i].url.replace("http:\/\/en.wikipedia.org\/wiki\/", "");
 
       circuitID = f1DataLive.MRData.CircuitTable.Circuits[i].circuitId;
-      console.log(circuitID);
+      //console.log(circuitID);
       $.ajax({
         url: "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&titles=" + ret + "&exsentences=3&exintro=1&explaintext=1&exsectionformat=plain&origin=*&redirects",
         dataType: "json",
@@ -225,7 +225,7 @@ function showInfo(e) {
             */
             var resultTab = result.MRData.RaceTable.Races[i].Results;
             const resultPodium = resultTab.filter(resultTab => resultTab.position < 4);
-            console.log(resultPodium);
+           // console.log(resultPodium);
             //console.log(result);
 
             //set up svg using margin conventions - we'll need plenty of room on the left for labels
@@ -355,8 +355,8 @@ function showInfo(e) {
             //Speedometer
 
             var BestAverageSpeed = 0;
-            console.log(BestAverageSpeed);
-            console.log(resultTab);
+            //console.log(BestAverageSpeed);
+            //console.log(resultTab);
             for (var i = 0; i < resultTab.length; i++) {
 
               if (BestAverageSpeed < resultTab[i].FastestLap.AverageSpeed.speed) {
