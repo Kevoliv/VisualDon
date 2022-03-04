@@ -32,7 +32,7 @@ slider.onchange = function () {
     
   });
   year = this.value;
-  //console.log("Changed !");
+  console.log(year);
   fetchData();
   fetchDataResults()
   addMarker();
