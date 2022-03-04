@@ -19,6 +19,13 @@ var myStyle = {
 
 var slider = document.getElementById("myRange");
 var year = new Date().getFullYear();  // returns the current year;
+var dynYear = document.querySelector('input[id="myRange"]');
+console.log(dynYear.value);
+dynYear.value = "2022";
+dynYear.max = "2022";
+console.log(Myelement.value);
+
+
 document.getElementById("year").textContent = year;
 // Update the current slider value (each time you drag the slider handle)
 slider.onchange = function () {
