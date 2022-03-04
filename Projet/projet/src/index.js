@@ -18,12 +18,8 @@ var myStyle = {
 };
 
 var slider = document.getElementById("myRange");
-var year = new Date().getFullYear();  // returns the current year;
-var dynYear = document.querySelector('input[name="YearSlider"]');
-console.log(dynYear.value);
-dynYear.value = "2022";
-dynYear.max = "2022";
-console.log(dynYear.value);
+var year = 2022;
+
 
 
 document.getElementById("year").textContent = year;
