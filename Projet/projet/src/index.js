@@ -35,10 +35,10 @@ slider.onchange = function () {
       map.removeLayer(layer);
 
     }
-    
+
   });
   year = this.value;
- // console.log(year);
+  // console.log(year);
   fetchData();
   fetchDataResults()
   addMarker();
@@ -48,7 +48,7 @@ slider.oninput = function () {
   year = this.value;
   //console.log(year);
   document.getElementById("year").textContent = year;
-  
+
 
 }
 
@@ -68,7 +68,7 @@ function fetchDataResults() {
     .then(r => r.json())
     .then(data => result = data)
     .then(data => console.log("Result: " + data))
-    
+
 }
 
 
@@ -89,6 +89,13 @@ const icon = L.icon({
   iconUrl: 'images/location.png',
   iconSize: [30, 30],
   iconAnchor: [15, 30],
+  popupAnchor: [1, -34]
+})
+const iconFutur = L.icon({
+  iconUrl: 'images/locationfutur.png',
+  iconSize: [30, 30],
+  iconAnchor: [15, 30],
+  popupAnchor: [1, -34]
 })
 
 map.on('moveend', function () {
@@ -150,11 +157,59 @@ function addMarker() {
 
   setTimeout(() => {
 
-    //console.log("CircuitTime: " + f1DataLive.MRData.CircuitTable.Circuits.length)
+
+    var isDone = false;
+
 
     for (var i = 0; i < f1DataLive.MRData.CircuitTable.Circuits.length; i++) {
 
-      loc = L.marker([f1DataLive.MRData.CircuitTable.Circuits[i].Location.lat, f1DataLive.MRData.CircuitTable.Circuits[i].Location.long], { icon });
+      circuitID = f1DataLive.MRData.CircuitTable.Circuits[i].circuitId;
+
+      for (var i2 = 0; i2 < result.MRData.RaceTable.Races.length; i2++) {
+
+        if (result.MRData.RaceTable.Races[i2].Circuit.circuitId == circuitID || isDone == true) {
+
+          isDone = true;
+
+        } else {
+
+          isDone = false;
+
+        }
+      }
+
+      if (isDone == true) {
+
+        loc = L.marker([f1DataLive.MRData.CircuitTable.Circuits[i].Location.lat, f1DataLive.MRData.CircuitTable.Circuits[i].Location.long], { icon: icon });
+        isDone = false;
+
+      } else {
+
+        loc = L.marker([f1DataLive.MRData.CircuitTable.Circuits[i].Location.lat, f1DataLive.MRData.CircuitTable.Circuits[i].Location.long], { icon: iconFutur });
+
+      }
+      /*for (var i = 0; i < result.MRData.RaceTable.Races.length; i++) {
+        //console.log(result.MRData.RaceTable.Races[i].Circuit.circuitId)
+        console.log("TEST 1");
+        if (circuitID == result.MRData.RaceTable.Races[i].Circuit.circuitId) {
+          console.log("TEST " + result.MRData.RaceTable.Races[i].Results);
+
+          if (result.MRData.RaceTable.Races[i].Results == null) {
+
+            loc = L.marker([f1DataLive.MRData.CircuitTable.Circuits[i].Location.lat, f1DataLive.MRData.CircuitTable.Circuits[i].Location.long], { iconFutur });
+
+          } else {
+
+            loc = L.marker([f1DataLive.MRData.CircuitTable.Circuits[i].Location.lat, f1DataLive.MRData.CircuitTable.Circuits[i].Location.long], { iconFutur });
+
+          }
+
+
+        }
+      }*/
+
+      // loc = L.marker([f1DataLive.MRData.CircuitTable.Circuits[i].Location.lat, f1DataLive.MRData.CircuitTable.Circuits[i].Location.long], { icon });
+
       layerGroup.addLayer(loc)
       loc.bindPopup(L.popup().setContent(f1DataLive.MRData.CircuitTable.Circuits[i].circuitName));
       loc.on("mouseover", function (evt) { this.openPopup(); });
@@ -196,7 +251,7 @@ function showInfo(e) {
           setTimeout(() => {
             multipolygon.addTo(map);
           }, 1000);
-         
+
         },
         error: function (xhr) {
           alert(xhr.statusText)
@@ -225,7 +280,7 @@ function showInfo(e) {
             */
             var resultTab = result.MRData.RaceTable.Races[i].Results;
             const resultPodium = resultTab.filter(resultTab => resultTab.position < 4);
-           // console.log(resultPodium);
+            // console.log(resultPodium);
             //console.log(result);
 
             //set up svg using margin conventions - we'll need plenty of room on the left for labels
@@ -260,16 +315,16 @@ function showInfo(e) {
 
             //make y axis to show bar names
             var yAxis = d3.axisLeft(y)
-         
+
             var gy = svg.append("g")
               .attr("class", "y axis")
               .call(yAxis)
-              
+
             var bars = svg.selectAll(".bar")
               .data(resultPodium)
               .enter()
               .append("g")
-              
+
             //append rects <p id="PasDispoP">Données pas disponibles</p>
             bars.append("rect")
               .attr("class", "bar")
@@ -349,7 +404,7 @@ function showInfo(e) {
               .delay(function (d, i) { console.log(i); return (i * 100) });
 
 
-           // console.log("add");
+            // console.log("add");
 
             //---------------------------------------------------------------------------
             //Speedometer
@@ -366,7 +421,7 @@ function showInfo(e) {
 
             }
 
-           // console.log(BestAverageSpeed);
+            // console.log(BestAverageSpeed);
 
             // Data
             var value = (BestAverageSpeed / 260);
@@ -382,7 +437,7 @@ function showInfo(e) {
 
             var duration = 1500;
             var transition = 200;
-           
+
             var colors = ["#cc0000", "#F5F5F5"]
 
             var pies = d3.pie()
@@ -434,7 +489,7 @@ function showInfo(e) {
   document.getElementById("info").style.visibility = "visible";
   //console.log(e.latlng.lng);
   map.flyTo(e.latlng, 15, { 'duration': 1.2 });
-  
+
 }
 
 //---------------------------------------------------------------------------
