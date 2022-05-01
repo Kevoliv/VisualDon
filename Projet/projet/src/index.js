@@ -1,4 +1,4 @@
-import L, { marker } from 'leaflet'
+import L, { latLng, marker } from 'leaflet'
 import circuit_trace from './circuit_trace.json'
 import * as d3 from 'd3'
 
@@ -9,6 +9,7 @@ var name = "";
 var multipolygon;
 var circuitID;
 var loc;
+let centerTrack = null;
 
 var layerGroup;
 var myStyle = {
@@ -18,6 +19,7 @@ var myStyle = {
 };
 
 var slider = document.getElementById("myRange");
+let close = document.getElementsByClassName("close");
 var year = new Date().getFullYear();  // returns the current year;
 
 slider.setAttribute('max', year);
@@ -140,11 +142,13 @@ function onMapClick(e) {
   document.getElementById("info").style.visibility = "hidden";
   map.flyTo([15, 0], 3, { 'duration': 1.2 });
   clean_map();
-  //console.log("clean");
+  console.log("clean");
 }
 
-// Afficher la popup d'information
-map.on('click', onMapClick);
+//Event du bouton close
+document.getElementById('close').onclick = function() {onMapClick()};
+
+//map.on('click', onMapClick);
 fetchData();
 fetchDataResults()
 addMarker();
@@ -250,6 +254,8 @@ function showInfo(e) {
           })
           setTimeout(() => {
             multipolygon.addTo(map);
+            //centerTrack = getCentroid2(circuit_trace.features.geometry.coordinates)
+            //console.log(multipolygon);
           }, 1000);
 
         },
@@ -263,12 +269,50 @@ function showInfo(e) {
       document.getElementById("country").textContent = f1DataLive.MRData.CircuitTable.Circuits[i].Location.country;
       document.getElementById("city").textContent = " | " + f1DataLive.MRData.CircuitTable.Circuits[i].Location.locality;
 
+      console.log(f1DataLive.MRData.CircuitTable.Circuits[i].Location.locality)
+            for (let i2 = 0; i2 < circuit_trace.features.length; i2++) {
+              if(circuit_trace.features[i2].properties.Name.includes(f1DataLive.MRData.CircuitTable.Circuits[i].circuitName)){
+
+                console.log("Trouvé:", circuit_trace.features[i2].properties.Name);
+
+                let bound1 = [circuit_trace.features[i2].bbox[3],circuit_trace.features[i2].bbox[0] ];
+                let bound2 = [circuit_trace.features[i2].bbox[1] ,circuit_trace.features[i2].bbox[2]];
+                console.log(bound1);
+                console.log(bound2);
+                centerTrack = L.latLngBounds(bound2,bound1);
+                //centerTrack = circuit_trace.features[i2].get
+
+                console.log(centerTrack);
+
+              }else{ 
+
+                if(circuit_trace.features[i2].properties.Location.includes(f1DataLive.MRData.CircuitTable.Circuits[i].Location.locality)){
+                  console.log("Trouvé 2:", circuit_trace.features[i2].properties.Name);
+                  let bound1 = [circuit_trace.features[i2].bbox[3],circuit_trace.features[i2].bbox[0] ];
+                let bound2 = [circuit_trace.features[i2].bbox[1] ,circuit_trace.features[i2].bbox[2]];
+                  centerTrack = L.latLngBounds(bound2,bound1);
+                  
+
+                }else{
+
+                  //console.log("PAS Trouvé:", f1DataLive.MRData.CircuitTable.Circuits[i].Location.locality);
+                  //console.log("PAS Trouvé:", f1DataLive.MRData.CircuitTable.Circuits[i].circuitName);
+
+                }
+
+                
+              }
+              
+            }
       setTimeout(() => {
 
+        
+        
         for (var i = 0; i < result.MRData.RaceTable.Races.length; i++) {
+         
           //console.log(result.MRData.RaceTable.Races[i].Circuit.circuitId)
           if (circuitID == result.MRData.RaceTable.Races[i].Circuit.circuitId) {
-
+            console.log("avant");
             /*console.log("avant")
             console.log(result.MRData.RaceTable.Races[i].Circuit.circuitName);
             console.log("Hey")
@@ -278,6 +322,10 @@ function showInfo(e) {
 
 
             */
+
+            
+
+
             var resultTab = result.MRData.RaceTable.Races[i].Results;
             const resultPodium = resultTab.filter(resultTab => resultTab.position < 4);
             // console.log(resultPodium);
@@ -487,12 +535,44 @@ function showInfo(e) {
   }
 
   document.getElementById("info").style.visibility = "visible";
-  //console.log(e.latlng.lng);
-  map.flyTo(e.latlng, 15, { 'duration': 1.2 });
+  let lat = e.latlng.lat;
+  let long = e.latlng.lng + 0.006;
+  //map.flyTo(latLng(lat , long), 15, { 'duration': 1.2 });
+console.log("CENTER: ", centerTrack);
 
+if(centerTrack === null || centerTrack === undefined){
+  
+
+  console.log("FLYYYY");
+  map.flyTo(latLng(lat , long), 15, { 'duration': 1.2 });
+  centerTrack = null;
+}else{
+  console.log("BOUNNNNND");
+  map.flyToBounds(centerTrack, { 'duration': 1.2,  'maxZoom': 15.8 , 'paddingBottomRight': [400 , 0],});
+   centerTrack = null;
+}
+  
 }
 
 //---------------------------------------------------------------------------
 
+var getCentroid2 = function (arr) {
+  var twoTimesSignedArea = 0;
+  var cxTimes6SignedArea = 0;
+  var cyTimes6SignedArea = 0;
 
+  var length = arr.length
+
+  var x = function (i) { return arr[i % length][0] };
+  var y = function (i) { return arr[i % length][1] };
+
+  for ( var i = 0; i < arr.length; i++) {
+      var twoSA = x(i)*y(i+1) - x(i+1)*y(i);
+      twoTimesSignedArea += twoSA;
+      cxTimes6SignedArea += (x(i) + x(i+1)) * twoSA;
+      cyTimes6SignedArea += (y(i) + y(i+1)) * twoSA;
+  }
+  var sixSignedArea = 3 * twoTimesSignedArea;
+  return [ cxTimes6SignedArea / sixSignedArea, cyTimes6SignedArea / sixSignedArea];        
+}
 

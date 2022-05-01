@@ -42,6 +42,14 @@ html,body {
       
 
     }
+    #close{
+
+      position: absolute;
+      top: 15px;
+      right: 15px;
+
+
+    }
     #explain{
 
       position: absolute;
@@ -125,7 +133,7 @@ html,body {
 
   #info{
 
-    background-color: rgb(129, 129, 129);
+    background-color: rgba(129, 129, 129, 0.897);
 
     border-radius: 15px;
     position: absolute;
